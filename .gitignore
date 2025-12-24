@@ -37,3 +37,4 @@ __pycache__/
 *.pid
 *.seed
 *.pid.lock
+EcoLab.swiftpm/.swiftpm/xcode/package.xcworkspace/xcuserdata/khushi_rana.xcuserdatad/UserInterfaceState.xcuserstate
