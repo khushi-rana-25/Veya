@@ -17,7 +17,7 @@ struct SymptomDetailView: View {
             VStack{
                 TopView(symptom: symptom, color: color)
                 
-                OverViewView(symptom: symptom, color: color)
+                OverViewView(symptom: symptom)
                 
                 VStack(alignment: .leading, spacing: 20){
                     Text("Remedies & Tips")
@@ -53,6 +53,8 @@ struct TopView: View{
                 .font(.largeTitle)
                 .foregroundStyle(color)
                 .fontWeight(.bold)
+                .frame(maxWidth: .infinity)
+                .multilineTextAlignment(.center)
             
             HStack{
                 ForEach(symptom.trimesters.indices, id: \.self) { index in
@@ -60,7 +62,7 @@ struct TopView: View{
                         .foregroundStyle(color)
                         .font(.caption.bold())
                         .padding()
-                        .background(Color.green.opacity(0.2))
+                        .background(color.opacity(0.2))
                         .clipShape(.capsule)
                 }
             }
@@ -70,7 +72,6 @@ struct TopView: View{
 
 struct OverViewView: View {
     let symptom: Symptom
-    let color: Color
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20){
@@ -80,12 +81,13 @@ struct OverViewView: View {
                 .fontWeight(.semibold)
             
             VStack{
-                Text(symptom.whatIsIt)
-                    .foregroundStyle(color)
+                Text("\"\(symptom.whatIsIt)\"")
+                    .foregroundStyle(.primary)
                     .font(.headline)
+                    .fontWeight(.medium)
                 
                 Divider()
-                    .overlay(color.opacity(0.6))
+                    .overlay(.black.opacity(0.6))
                 
                 Text(symptom.description)
                     .foregroundStyle(Color(#colorLiteral(red: 0.4756349325, green: 0.4756467342, blue: 0.4756404161, alpha: 1)))
@@ -107,7 +109,7 @@ struct RemedyRowView: View {
                 Image(systemName: "checkmark.circle.fill")
                     .resizable()
                     .scaledToFit()
-                    .foregroundStyle(Color(#colorLiteral(red: 0, green: 0.5628422499, blue: 0.3188166618, alpha: 1)).opacity(0.7))
+                    .foregroundStyle(Color(#colorLiteral(red: 0, green: 0.5484743714, blue: 0.3741536736, alpha: 1)).opacity(0.8))
                     .frame(width: 30, height: 30)
                 
                 Text(remedy)
@@ -120,7 +122,7 @@ struct RemedyRowView: View {
             .frame(maxWidth: .infinity)
             .background(Color(.systemBackground))
             .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: Color.black.opacity(0.2), radius: 2)
+            .shadow(color: Color.black.opacity(0.1), radius: 2)
     }
 }
 
@@ -141,7 +143,6 @@ struct DangerView: View {
                         .foregroundStyle(Color(#colorLiteral(red: 0.7575458288, green: 0, blue: 0.03144354746, alpha: 1)))
                 }
                 
-
                 Text("You cannot keep any food or fluids down for 24 hours.")
                     .foregroundStyle(Color(#colorLiteral(red: 0.5861611366, green: 0.2364613414, blue: 0.2301900387, alpha: 1)))
                     .font(.subheadline)
