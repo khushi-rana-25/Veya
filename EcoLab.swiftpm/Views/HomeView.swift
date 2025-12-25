@@ -3,7 +3,7 @@ import SwiftUI
 struct HomeView: View {
     
     @State private var symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
-    let iconColors: [Color] = [.yellow, .blue, .indigo, .pink, .orange, .mint]
+    let iconColors: [Color] = [.gray, .blue, .indigo, .pink, .orange, .mint]
     @State private var searchText: String = ""
     
     var body: some View {
@@ -33,6 +33,11 @@ struct HomeView: View {
                     }
                     label: {
                         Image(systemName: "line.3.horizontal.decrease.circle")
+                    }
+                }
+                ToolbarItem {
+                    NavigationLink(destination: LogSymptomView()) {
+                        Image(systemName: "plus")
                     }
                 }
             }
