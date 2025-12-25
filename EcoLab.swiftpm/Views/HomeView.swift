@@ -3,67 +3,92 @@ import SwiftUI
 struct HomeView: View {
     
     @State private var symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
-    let iconColors: [Color] = [.gray, .blue, .indigo, .pink, .orange, .mint]
     @State private var searchText: String = ""
     
+    private let iconColors: [Color] = [.yellow, .blue, .indigo, .pink, .orange, .mint]
+    
     var body: some View {
-        NavigationStack{
-            VStack{
-                List{
-                    ForEach(Array(searchResults.enumerated()), id: \.element.id) { index, symptom in
-                        let iconColor = self.iconColors[index % iconColors.count]
-                        
-                        NavigationLink(destination: SymptomDetailView(symptom: symptom, color: iconColor)) {
-                            SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: iconColor)
+        TabView {
+            // Tab 1: Guide
+            NavigationStack {
+                symptomList
+                    .navigationTitle("Symptoms Guide")
+                    .toolbar {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Menu {
+                                Button("Sort A–Z") {
+                                    sortSymptoms()
+                                }
+                                Button("No Order") {
+                                    sortRandomly()
+                                }
+                            } label: {
+                                Image(systemName: "line.3.horizontal.decrease.circle")
+                            }
+                            .accessibilityLabel("Sorting options")
                         }
-                        .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
+                        ToolbarItem(placement: .topBarTrailing) {
+                            NavigationLink(destination: LogSymptomView()) {
+                                Image(systemName: "plus")
+                            }
+                            .accessibilityLabel("Log symptom")
+                        }
                     }
-                }
             }
-            .navigationTitle("Symptoms Guide")
-            .toolbar{
-                ToolbarItem(placement: .topBarTrailing) {
-                    Menu{
-                        Button("Sort A-Z") {
-                            sortSymptoms()
-                        }
-                        Button("No Order"){
-                            sortRandomly()
-                        }
-                    }
-                    label: {
-                        Image(systemName: "line.3.horizontal.decrease.circle")
-                    }
-                }
-                ToolbarItem {
-                    NavigationLink(destination: LogSymptomView()) {
-                        Image(systemName: "plus")
-                    }
-                }
+            .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search symptoms")
+            .tabItem {
+                Image(systemName: "list.bullet.clipboard")
+                Text("Guide")
+            }
+            
+            // Tab 2: Journal
+            NavigationStack {
+                LogSymptomView()
+                    .navigationTitle("Journal")
+            }
+            .tabItem {
+                Image(systemName: "arrow.2.squarepath")
+                Text("Journal")
             }
         }
-        .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search symptoms")
+        .accentColor(.primary)
     }
     
-    var searchResults: [Symptom] {
-        if searchText.isEmpty {
-            return symptomsData
-        }
-        else{
-            return symptomsData.filter {
-                $0.name.lowercased().contains(searchText.lowercased())
+    private var symptomList: some View {
+        List {
+            ForEach(searchResults) { symptom in
+                let color = colorForSymptom(symptom)
+                
+                NavigationLink(destination: SymptomDetailView(symptom: symptom, color: color)) {
+                    SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: color)
+                }
+                .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
+        }
+        .listStyle(.insetGrouped)
+    }
+    
+    private var searchResults: [Symptom] {
+        let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        guard !query.isEmpty else { return symptomsData }
+        return symptomsData.filter { $0.name.lowercased().contains(query) }
+    }
+    
+    private func sortSymptoms() {
+        withAnimation {
+            symptomsData.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
         }
     }
     
-    func sortSymptoms() {
-        symptomsData = symptomsData.sorted { $0.name < $1.name }
-    }
-        
-    func sortRandomly() {
+    private func sortRandomly() {
         withAnimation {
             symptomsData.shuffle()
         }
+    }
+    
+    private func colorForSymptom(_ symptom: Symptom) -> Color {
+        let idx = abs(symptom.id.hashValue) % iconColors.count
+        return iconColors[idx]
     }
 }
 
@@ -73,7 +98,7 @@ struct SymptomRowView: View {
     let iconColor: Color
     
     var body: some View {
-        HStack(spacing: 20){
+        HStack(spacing: 20) {
             Image(systemName: symptomIcon)
                 .resizable()
                 .scaledToFit()
@@ -84,14 +109,21 @@ struct SymptomRowView: View {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(iconColor.opacity(0.1))
                 )
+                .accessibilityHidden(true)
             
             Text(symptomName)
                 .font(.headline)
                 .fontWeight(.regular)
+                .foregroundStyle(.primary)
+                .lineLimit(1)
+                .minimumScaleFactor(0.9)
             
             Spacer()
         }
         .padding(10)
+        .contentShape(Rectangle())
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel(symptomName)
     }
 }
 
