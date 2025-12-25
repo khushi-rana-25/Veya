@@ -2,7 +2,7 @@ import SwiftUI
 
 struct HomeView: View {
     
-    let symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
+    @State private var symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
     let iconColors: [Color] = [.yellow, .blue, .indigo, .pink, .orange, .mint]
     @State private var searchText: String = ""
     
@@ -10,10 +10,10 @@ struct HomeView: View {
         NavigationStack{
             VStack{
                 List{
-                    ForEach(Array(symptomsData.enumerated()), id: \.element.id) { index, symptom in
+                    ForEach(Array(searchResults.enumerated()), id: \.element.id) { index, symptom in
                         let iconColor = self.iconColors[index % iconColors.count]
                         
-                        NavigationLink(destination: Text(symptom.name)) {
+                        NavigationLink(destination: SymptomDetailView(symptom: symptom, color: iconColor)) {
                             SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: iconColor)
                         }
                         .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
@@ -21,8 +21,44 @@ struct HomeView: View {
                 }
             }
             .navigationTitle("Symptoms Guide")
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing) {
+                    Menu{
+                        Button("Sort A-Z") {
+                            sortSymptoms()
+                        }
+                        Button("No Order"){
+                            sortRandomly()
+                        }
+                    }
+                    label: {
+                        Image(systemName: "line.3.horizontal.decrease.circle")
+                    }
+                }
+            }
         }
         .searchable(text: $searchText, placement: .navigationBarDrawer, prompt: "Search symptoms")
+    }
+    
+    var searchResults: [Symptom] {
+        if searchText.isEmpty {
+            return symptomsData
+        }
+        else{
+            return symptomsData.filter {
+                $0.name.lowercased().contains(searchText.lowercased())
+            }
+        }
+    }
+    
+    func sortSymptoms() {
+        symptomsData = symptomsData.sorted { $0.name < $1.name }
+    }
+        
+    func sortRandomly() {
+        withAnimation {
+            symptomsData.shuffle()
+        }
     }
 }
 

@@ -22,6 +22,16 @@ struct Symptom: Identifiable {
 enum PregnancySymptoms {
     static let allSymptoms: [Symptom] = [
         Symptom(
+            name: "Nosebleeds",
+            icon: "bandage.fill",
+            whatIsIt: "Bleeding from the inside of your nose, which can be more frequent during pregnancy.",
+            trimesters: ["1st Trimester", "2nd Trimester", "3rd Trimester"],
+            description: "Increased blood volume and hormonal changes can cause the delicate blood vessels in your nose to swell and rupture more easily.",
+            remedies: ["Use a humidifier to keep the air moist.", "Blow your nose gently.", "If you get a nosebleed, sit down, lean forward, and pinch your nostrils firmly for 10-15 minutes."],
+            whenToCallDoctor: "If you have frequent nosebleeds or if the bleeding is heavy and doesn't stop after 20 minutes of pressure.",
+            sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/nosebleeds/)"
+        ),
+        Symptom(
             name: "Back Pain",
             icon: "figure.walk.arrival",
             whatIsIt: "A common ache or stiffness felt in the upper or, more commonly, lower back area during pregnancy.",
@@ -102,16 +112,6 @@ enum PregnancySymptoms {
             sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/headaches/)"
         ),
         Symptom(
-            name: "Incontinence",
-            icon: "drop.fill",
-            whatIsIt: "The unintentional leaking of urine, often when you cough, sneeze, laugh, or exercise (known as stress incontinence).",
-            trimesters: ["2nd Trimester", "3rd Trimester"],
-            description: "The growing uterus puts pressure on your bladder, which can cause leakage of urine.",
-            remedies: ["Practice Kegel exercises to strengthen pelvic floor muscles.", "Urinate frequently; don't wait until your bladder is full.", "Wear a panty liner for protection."],
-            whenToCallDoctor: "If you experience pain or a burning sensation when you urinate, as this could be a urinary tract infection (UTI).",
-            sources: "[Babycenter](https://www.babycenter.com/pregnancy/your-body/urinary-incontinence-during-pregnancy_20004870)"
-        ),
-        Symptom(
             name: "Indigestion and Heartburn",
             icon: "flame.fill",
             whatIsIt: "Heartburn is a burning feeling in the chest. Indigestion is a feeling of fullness, bloating, or discomfort after eating.",
@@ -130,16 +130,6 @@ enum PregnancySymptoms {
             remedies: ["Place nursing pads inside your bra to absorb the leakage."],
             whenToCallDoctor: "This is usually normal. However, you should mention it to your doctor if the discharge is bloody.",
             sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/leaking-nipples/)"
-        ),
-        Symptom(
-            name: "Nosebleeds",
-            icon: "bandage.fill",
-            whatIsIt: "Bleeding from the inside of your nose, which can be more frequent during pregnancy.",
-            trimesters: ["1st Trimester", "2nd Trimester", "3rd Trimester"],
-            description: "Increased blood volume and hormonal changes can cause the delicate blood vessels in your nose to swell and rupture more easily.",
-            remedies: ["Use a humidifier to keep the air moist.", "Blow your nose gently.", "If you get a nosebleed, sit down, lean forward, and pinch your nostrils firmly for 10-15 minutes."],
-            whenToCallDoctor: "If you have frequent nosebleeds or if the bleeding is heavy and doesn't stop after 20 minutes of pressure.",
-            sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/nosebleeds/)"
         ),
         Symptom(
             name: "Peeing a Lot",
@@ -170,16 +160,6 @@ enum PregnancySymptoms {
             remedies: ["Avoid constipation by eating fiber and drinking fluids.", "Don't strain during bowel movements.", "Use witch hazel pads or ice packs for relief.", "Avoid sitting for long periods."],
             whenToCallDoctor: "If you have significant rectal bleeding or if the pain is severe.",
             sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/piles/), [Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/expert-answers/hemorrhoids-during-pregnancy/faq-20058149)"
-        ),
-        Symptom(
-            name: "Skin Changes",
-            icon: "sparkles",
-            whatIsIt: "Changes to your skin, including stretch marks, a dark line on your belly (linea nigra), or dark patches on your face (melasma).",
-            trimesters: ["2nd Trimester", "3rd Trimester"],
-            description: "Hormones are the primary cause of these common skin changes during pregnancy.",
-            remedies: ["Use sunscreen with high SPF to prevent melasma from worsening.", "Keep skin well-moisturized to help with itching from stretch marks.", "Most changes fade after delivery."],
-            whenToCallDoctor: "If you develop a new rash or severe itching, especially on your hands and feet (a potential sign of cholestasis).",
-            sources: "[Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/pregnancy/art-20047732)"
         ),
         Symptom(
             name: "Stomach Pain",
@@ -232,6 +212,16 @@ enum PregnancySymptoms {
             sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/thrush/)"
         ),
         Symptom(
+            name: "Incontinence",
+            icon: "drop.fill",
+            whatIsIt: "The unintentional leaking of urine, often when you cough, sneeze, laugh, or exercise (known as stress incontinence).",
+            trimesters: ["2nd Trimester", "3rd Trimester"],
+            description: "The growing uterus puts pressure on your bladder, which can cause leakage of urine.",
+            remedies: ["Practice Kegel exercises to strengthen pelvic floor muscles.", "Urinate frequently; don't wait until your bladder is full.", "Wear a panty liner for protection."],
+            whenToCallDoctor: "If you experience pain or a burning sensation when you urinate, as this could be a urinary tract infection (UTI).",
+            sources: "[Babycenter](https://www.babycenter.com/pregnancy/your-body/urinary-incontinence-during-pregnancy_20004870)"
+        ),
+        Symptom(
             name: "Vaginal Bleeding",
             icon: "exclamationmark.triangle.fill", // Critical Warning Symbol
             whatIsIt: "Any amount of blood coming from the vagina during pregnancy, ranging from light spotting to heavy bleeding.",
@@ -243,7 +233,7 @@ enum PregnancySymptoms {
         ),
         Symptom(
             name: "Vaginal Discharge",
-            icon: "water.waves",
+            icon: "drop.fill",
             whatIsIt: "An increase in a thin, milky-white, and mild-smelling discharge known as leukorrhea.",
             trimesters: ["1st Trimester", "2nd Trimester", "3rd Trimester"],
             description: "An increase in leukorrhea is normal during pregnancy due to increased estrogen production and blood flow to the vaginal area.",
@@ -270,6 +260,16 @@ enum PregnancySymptoms {
             remedies: ["Eat small, frequent meals.", "Keep plain crackers by your bed to eat before getting up.", "Avoid smells that trigger nausea.", "Try sipping ginger ale or ginger tea."],
             whenToCallDoctor: "If you are vomiting multiple times a day, unable to keep any food or liquid down, and losing weight. This could be hyperemesis gravidarum.",
             sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/vomiting-and-morning-sickness/)"
-        )
+        ),
+        Symptom(
+            name: "Skin Changes",
+            icon: "sparkles",
+            whatIsIt: "Changes to your skin, including stretch marks, a dark line on your belly (linea nigra), or dark patches on your face (melasma).",
+            trimesters: ["2nd Trimester", "3rd Trimester"],
+            description: "Hormones are the primary cause of these common skin changes during pregnancy.",
+            remedies: ["Use sunscreen with high SPF to prevent melasma from worsening.", "Keep skin well-moisturized to help with itching from stretch marks.", "Most changes fade after delivery."],
+            whenToCallDoctor: "If you develop a new rash or severe itching, especially on your hands and feet (a potential sign of cholestasis).",
+            sources: "[Mayo Clinic](https://www.mayoclinic.org/healthy-lifestyle/pregnancy-week-by-week/in-depth/pregnancy/art-20047732)"
+        ),
     ]
 }
