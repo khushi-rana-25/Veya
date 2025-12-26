@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 
 struct SymptomsHistoryView: View {
+    @Environment(\.modelContext) var modelContext
     @Query var dataModel: [LogEntry]
     
     var body: some View {
@@ -17,10 +18,19 @@ struct SymptomsHistoryView: View {
                 ForEach(dataModel) { log in
                     SymptomHistoryRowView(log: log)
                 }
+                .onDelete(perform: deleteLog)
                 .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
             .listStyle(.plain)
             .navigationTitle("Journal")
+        }
+    }
+    
+    func deleteLog(at offsets: IndexSet) {
+        for offset in offsets {
+            let log = dataModel[offset]
+            modelContext.delete(log)
+            try? modelContext.save()
         }
     }
 }
