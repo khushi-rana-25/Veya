@@ -6,7 +6,7 @@ struct HomeView: View {
     @State private var searchText: String = ""
     @State private var isLogging: Bool = false
     
-    private let iconColors: [Color] = [.yellow, .blue, .indigo, .pink, .orange, .mint]
+    private let iconColors: [Color] = [.yellow, .blue, .indigo, .cyan, .brown, .mint, .green]
     
     var body: some View {
         TabView {
@@ -47,7 +47,7 @@ struct HomeView: View {
             
             // Tab 2: Journal
             NavigationStack {
-                LogSymptomView()
+                SymptomsHistoryView()
                     .navigationTitle("Journal")
             }
             .tabItem {
@@ -65,7 +65,7 @@ struct HomeView: View {
             
                 NavigationLink {
                     if isLogging{
-                        LogSymptomView()
+                        LogSymptomView(symptom: symptom, color: color)
                     }
                     else{
                         SymptomDetailView(symptom: symptom, color: color)
@@ -115,7 +115,7 @@ struct SymptomRowView: View {
             if isLogging {
                 Image(systemName: "plus.circle.fill")
                         .font(.title2)
-                        .foregroundStyle(Color.blue)
+                        .foregroundStyle(Color.green)
                         .transition(.move(edge: .leading).combined(with: .opacity))
             }
             

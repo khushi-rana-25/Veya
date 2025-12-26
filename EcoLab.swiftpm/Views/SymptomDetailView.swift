@@ -164,15 +164,3 @@ struct DangerView: View {
     }
 }
 
-#Preview {
-    SymptomDetailView(symptom: Symptom(
-        name: "Nosebleeds",
-        icon: "bandage.fill",
-        whatIsIt: "Bleeding from the inside of your nose, which can be more frequent during pregnancy.",
-        trimesters: ["1st Trimester", "2nd Trimester", "3rd Trimester"],
-        description: "Increased blood volume and hormonal changes can cause the delicate blood vessels in your nose to swell and rupture more easily.",
-        remedies: ["Use a humidifier to keep the air moist.", "Blow your nose gently.", "If you get a nosebleed, sit down, lean forward, and pinch your nostrils firmly for 10-15 minutes."],
-        whenToCallDoctor: "If you have frequent nosebleeds or if the bleeding is heavy and doesn't stop after 20 minutes of pressure.",
-        sources: "[NHS](https://www.nhs.uk/pregnancy/related-conditions/common-symptoms/nosebleeds/)"
-    ), color: .green)
-}
