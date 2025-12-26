@@ -4,6 +4,7 @@ struct HomeView: View {
     
     @State private var symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
     @State private var searchText: String = ""
+    @State private var isLogging: Bool = false
     
     private let iconColors: [Color] = [.yellow, .blue, .indigo, .pink, .orange, .mint]
     
@@ -28,10 +29,13 @@ struct HomeView: View {
                             .accessibilityLabel("Sorting options")
                         }
                         ToolbarItem(placement: .topBarTrailing) {
-                            NavigationLink(destination: LogSymptomView()) {
-                                Image(systemName: "plus")
+                            Button{
+                                isLogging.toggle()
                             }
-                            .accessibilityLabel("Log symptom")
+                            label: {
+                                    Image(systemName: isLogging ? "xmark.circle.fill" : "plus")
+                                        .accessibilityLabel("Log symptom")
+                            }
                         }
                     }
             }
@@ -58,9 +62,16 @@ struct HomeView: View {
         List {
             ForEach(searchResults) { symptom in
                 let color = colorForSymptom(symptom)
-                
-                NavigationLink(destination: SymptomDetailView(symptom: symptom, color: color)) {
-                    SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: color)
+            
+                NavigationLink {
+                    if isLogging{
+                        LogSymptomView()
+                    }
+                    else{
+                        SymptomDetailView(symptom: symptom, color: color)
+                    }
+                } label: {
+                    SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: color, isLogging: isLogging)
                 }
                 .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
@@ -96,9 +107,18 @@ struct SymptomRowView: View {
     let symptomName: String
     let symptomIcon: String
     let iconColor: Color
+    var isLogging: Bool
     
     var body: some View {
         HStack(spacing: 20) {
+            
+            if isLogging {
+                Image(systemName: "plus.circle.fill")
+                        .font(.title2)
+                        .foregroundStyle(Color.blue)
+                        .transition(.move(edge: .leading).combined(with: .opacity))
+            }
+            
             Image(systemName: symptomIcon)
                 .resizable()
                 .scaledToFit()
@@ -124,6 +144,7 @@ struct SymptomRowView: View {
         .contentShape(Rectangle())
         .accessibilityElement(children: .combine)
         .accessibilityLabel(symptomName)
+        .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLogging)
     }
 }
 
