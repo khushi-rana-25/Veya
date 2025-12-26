@@ -77,6 +77,11 @@ struct HomeView: View {
             }
         }
         .listStyle(.insetGrouped)
+        .onAppear {
+            withAnimation {
+                isLogging = false
+            }
+        }
     }
     
     private var searchResults: [Symptom] {

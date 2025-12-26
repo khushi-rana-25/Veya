@@ -6,56 +6,66 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct SymptomsHistoryView: View {
+    @Query var dataModel: [LogEntry]
+    
     var body: some View {
         NavigationStack{
             List{
-                ForEach(0..<5) { index in
-                    SymnptomHistoryRowView()
+                ForEach(dataModel) { log in
+                    SymptomHistoryRowView(log: log)
                 }
                 .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
-            .listStyle(.insetGrouped)
+            .listStyle(.plain)
             .navigationTitle("Journal")
         }
     }
 }
 
-struct SymnptomHistoryRowView: View {
+struct SymptomHistoryRowView: View {
+    let log: LogEntry
+    
     var body: some View {
         
         HStack(spacing: 20){
-            Image(systemName: "bandage.fill")
-                .resizable()
-                .scaledToFit()
-                .frame(width: 25, height: 25)
-                .foregroundStyle(.blue)
-                .background(
-                    Circle()
-                        .fill(.blue.opacity(0.3))
-                        .frame(width: 40, height: 40)
-                )
             
             VStack(alignment: .leading){
-                Text("Migraine")
+                Text(log.symptomName)
                     .font(.title3)
                     .fontWeight(.semibold)
                 
-                Text("Today, 9:41 AM")
+                Text(formatted(log.timestamp))
                     .foregroundStyle(.secondary)
             }
             
             Spacer()
             
-            Text("Severe")
-                .foregroundStyle(.blue)
-                .padding(10)
+            let color: Color = log.severity == "Mild" ? .mint : (log.severity == "Moderate" ? .yellow : .red)
+            
+            Text(log.severity)
+                .padding()
+                .foregroundStyle(color)
+                .frame(width: 120)
                 .overlay(
                     RoundedRectangle(cornerRadius: 27)
-                        .strokeBorder(.blue, lineWidth: 2)
+                        .strokeBorder(.primary, lineWidth: 2)
                 )
         }
+    }
+    
+    private static let timestampFormatter: DateFormatter = {
+        let df = DateFormatter()
+        df.dateStyle = .medium
+        df.timeStyle = .short
+        df.doesRelativeDateFormatting = false
+        return df
+    }()
+    
+    private func formatted(_ date: Date) -> String {
+        Self.timestampFormatter.string(from: date)
     }
 }
 

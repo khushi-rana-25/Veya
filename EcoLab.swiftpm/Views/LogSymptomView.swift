@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 enum SymptomMode: String {
     case mild = "Mild"
@@ -18,6 +19,8 @@ struct LogSymptomView: View {
     let color: Color
     @State private var sliderValue: Double = 0
     @State private var isPulsing: Bool = false
+    @Environment(\.modelContext) private var modelContext
+    @Environment(\.dismiss) private var dismiss
     
     var body: some View {
         VStack{
@@ -106,7 +109,10 @@ struct LogSymptomView: View {
             .foregroundStyle(.secondary)
             
             Button {
+                let newData = LogEntry(symptomName: symptom.name, severity: currentMode.rawValue)
+                 modelContext.insert(newData)
                 
+                dismiss()
             }
             label: {
                 Text("Log Symptom")
