@@ -32,6 +32,11 @@ struct SymptomDetailView: View {
                 .padding()
                 
                 DangerView()
+                
+                Text(.init(symptom.sources))
+                    .padding()
+                    .tint(.blue)
+                    
             }
             .padding(.top, 50)
         }

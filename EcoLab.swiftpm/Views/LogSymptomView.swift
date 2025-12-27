@@ -111,6 +111,7 @@ struct LogSymptomView: View {
             Button {
                 let newData = LogEntry(symptomName: symptom.name, severity: currentMode.rawValue)
                  modelContext.insert(newData)
+                try? modelContext.save()
                 
                 dismiss()
             }
