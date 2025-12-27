@@ -26,6 +26,17 @@ struct SymptomsHistoryView: View {
             }
             .listStyle(.plain)
             .navigationTitle("Journal")
+            .toolbar {
+                ToolbarItem(placement: .topBarTrailing) {
+                    NavigationLink {
+                        LogGraphView()
+                    } label: {
+                        Image(systemName: "chart.bar.xaxis")
+                            .foregroundStyle(.blue)
+                    }
+
+                }
+            }
         }
     }
 }
@@ -61,4 +72,3 @@ struct SymptomHistoryRowView: View {
         }
     }
 }
-
