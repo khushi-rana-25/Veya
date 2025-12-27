@@ -120,7 +120,6 @@ struct SymptomRowView: View {
                 .font(.headline)
                 .fontWeight(.regular)
                 .foregroundStyle(.primary)
-                .lineLimit(1)
                 .minimumScaleFactor(0.9)
             
             Spacer()
