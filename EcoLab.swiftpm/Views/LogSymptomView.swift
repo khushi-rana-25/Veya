@@ -19,8 +19,9 @@ struct LogSymptomView: View {
     let color: Color
     @State private var sliderValue: Double = 0
     @State private var isPulsing: Bool = false
-    @Environment(\.modelContext) private var modelContext
+    @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) private var dismiss
+    @State var viewModel: ViewModel = ViewModel()
     
     var body: some View {
         VStack{
@@ -109,9 +110,7 @@ struct LogSymptomView: View {
             .foregroundStyle(.secondary)
             
             Button {
-                let newData = LogEntry(symptomName: symptom.name, severity: currentMode.rawValue)
-                 modelContext.insert(newData)
-                try? modelContext.save()
+                viewModel.addLog(symptomName: symptom.name, severity: currentMode.rawValue, context: modelContext)
                 
                 dismiss()
             }

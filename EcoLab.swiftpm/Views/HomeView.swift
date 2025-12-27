@@ -1,12 +1,9 @@
 import SwiftUI
 
 struct HomeView: View {
-    
-    @State private var symptomsData: [Symptom] = PregnancySymptoms.allSymptoms
     @State private var searchText: String = ""
     @State private var isLogging: Bool = false
-    
-    private let iconColors: [Color] = [.yellow, .blue, .indigo, .cyan, .brown, .mint, .green]
+    @State private var viewModel: HomeViewModel = HomeViewModel()
     
     var body: some View {
         TabView {
@@ -18,10 +15,10 @@ struct HomeView: View {
                         ToolbarItem(placement: .topBarTrailing) {
                             Menu {
                                 Button("Sort A–Z") {
-                                    sortSymptoms()
+                                    viewModel.sortSymptoms()
                                 }
                                 Button("No Order") {
-                                    sortRandomly()
+                                    viewModel.sortRandomly()
                                 }
                             } label: {
                                 Image(systemName: "line.3.horizontal.decrease.circle")
@@ -61,7 +58,7 @@ struct HomeView: View {
     private var symptomList: some View {
         List {
             ForEach(searchResults) { symptom in
-                let color = colorForSymptom(symptom)
+                let color = viewModel.colorForSymptom(symptom)
             
                 NavigationLink {
                     if isLogging{
@@ -86,25 +83,8 @@ struct HomeView: View {
     
     private var searchResults: [Symptom] {
         let query = searchText.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-        guard !query.isEmpty else { return symptomsData }
-        return symptomsData.filter { $0.name.lowercased().contains(query) }
-    }
-    
-    private func sortSymptoms() {
-        withAnimation {
-            symptomsData.sort { $0.name.localizedCaseInsensitiveCompare($1.name) == .orderedAscending }
-        }
-    }
-    
-    private func sortRandomly() {
-        withAnimation {
-            symptomsData.shuffle()
-        }
-    }
-    
-    private func colorForSymptom(_ symptom: Symptom) -> Color {
-        let idx = abs(symptom.id.hashValue) % iconColors.count
-        return iconColors[idx]
+        guard !query.isEmpty else { return viewModel.symptomsData }
+        return viewModel.symptomsData.filter { $0.name.lowercased().contains(query) }
     }
 }
 

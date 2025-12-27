@@ -90,12 +90,14 @@ struct OverViewView: View {
                     .foregroundStyle(.primary)
                     .font(.headline)
                     .fontWeight(.medium)
+                    .multilineTextAlignment(.leading)
                 
                 Divider()
                     .overlay(.black.opacity(0.6))
                 
                 Text(symptom.description)
                     .foregroundStyle(Color(#colorLiteral(red: 0.4756349325, green: 0.4756467342, blue: 0.4756404161, alpha: 1)))
+                    .multilineTextAlignment(.leading)
             }
             .padding()
             .background(Color(.systemBackground))

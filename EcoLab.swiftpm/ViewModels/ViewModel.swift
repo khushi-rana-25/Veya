@@ -8,6 +8,21 @@
 import Foundation
 import SwiftData
 
+@Observable
 class ViewModel {
     
+    func addLog(symptomName: String, severity: String, context: ModelContext){
+        let newData = LogEntry(symptomName: symptomName, severity: severity)
+        context.insert(newData)
+        
+        try? context.save()
+    }
+    
+    func deleteLog(at offsets: IndexSet, from logs: [LogEntry], context: ModelContext) {
+        for offset in offsets {
+            let logToDelete = logs[offset]
+            context.delete(logToDelete)
+            try? context.save()
+        }
+    }
 }

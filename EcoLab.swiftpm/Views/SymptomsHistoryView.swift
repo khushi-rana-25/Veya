@@ -10,7 +10,8 @@ import SwiftData
 
 struct SymptomsHistoryView: View {
     @Environment(\.modelContext) var modelContext
-    @Query var dataModel: [LogEntry]
+    @Query(sort: \LogEntry.timestamp, order: .reverse) var dataModel: [LogEntry]
+    @State var viewModel: ViewModel = ViewModel()
     
     var body: some View {
         NavigationStack{
@@ -18,19 +19,13 @@ struct SymptomsHistoryView: View {
                 ForEach(dataModel) { log in
                     SymptomHistoryRowView(log: log)
                 }
-                .onDelete(perform: deleteLog)
+                .onDelete(perform: { indexSet in
+                    viewModel.deleteLog(at: indexSet, from: dataModel, context: modelContext)
+                })
                 .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
             .listStyle(.plain)
             .navigationTitle("Journal")
-        }
-    }
-    
-    func deleteLog(at offsets: IndexSet) {
-        for offset in offsets {
-            let log = dataModel[offset]
-            modelContext.delete(log)
-            try? modelContext.save()
         }
     }
 }
@@ -44,7 +39,7 @@ struct SymptomHistoryRowView: View {
             
             VStack(alignment: .leading){
                 Text(log.symptomName)
-                    .font(.title3)
+                    .font(.headline)
                     .fontWeight(.semibold)
                 
                 Text(formatted(log.timestamp))
@@ -79,6 +74,3 @@ struct SymptomHistoryRowView: View {
     }
 }
 
-#Preview {
-    SymptomsHistoryView()
-}
