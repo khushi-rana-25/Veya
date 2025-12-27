@@ -17,11 +17,17 @@ enum SymptomMode: String {
 struct LogSymptomView: View {
     let symptom: Symptom
     let color: Color
-    @State private var sliderValue: Double = 0
     @State private var isPulsing: Bool = false
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) private var dismiss
-    @State var viewModel: ViewModel = ViewModel()
+    @State var logViewModel: LogSymptomViewModel
+    @State var viewModel = ViewModel()
+    
+    init(symptom: Symptom, color: Color) {
+        self.symptom = symptom
+        self.color = color
+        _logViewModel = State(initialValue: LogSymptomViewModel(color: color))
+    }
     
     var body: some View {
         VStack{
@@ -37,22 +43,6 @@ struct LogSymptomView: View {
             bottomView
         }
         .padding()
-    }
-    
-    var currentMode: SymptomMode {
-        if sliderValue < 0.33 { return .mild }
-        else if sliderValue < 0.66 { return .moderate }
-        else { return .severe }
-    }
-    
-    var activeColor: Color {
-        if sliderValue < 0.33 { return color }
-        else if sliderValue < 0.66 { return .orange }
-        else { return .red }
-    }
-    
-    var animationDuration: Double {
-        return 2.0 - (sliderValue * 1.5)
     }
     
     var topView: some View {
@@ -73,21 +63,21 @@ struct LogSymptomView: View {
     var pulseView: some View {
         ZStack {
             Circle()
-                .fill(activeColor)
+                .fill(logViewModel.activeColor)
                 .frame(width: 150, height: 150)
                 .blur(radius: 50)
                 .opacity(0.6)
-                .scaleEffect(isPulsing ? 1.3 + (sliderValue * 0.5) : 1.0)
+                .scaleEffect(isPulsing ? 1.3 + (logViewModel.sliderValue * 0.5) : 1.0)
             
             Image(systemName: symptom.icon)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
-                .foregroundStyle(activeColor)
+                .foregroundStyle(logViewModel.activeColor)
                 .scaleEffect(isPulsing ? 1.3 : 1.0)
         }
         .onAppear {
-            withAnimation(.easeInOut(duration: animationDuration).repeatForever(autoreverses: true)) {
+            withAnimation(.easeInOut(duration: logViewModel.animationDuration).repeatForever(autoreverses: true)) {
                 isPulsing = true
             }
         }
@@ -95,12 +85,12 @@ struct LogSymptomView: View {
     
     var bottomView: some View {
         VStack{
-            Text(currentMode.rawValue)
+            Text(logViewModel.currentMode.rawValue)
                 .font(.headline)
-                .foregroundStyle(currentMode == .mild ? .green : (currentMode == .moderate ? .yellow : .red))
+                .foregroundStyle(logViewModel.currentMode == .mild ? .green : (logViewModel.currentMode == .moderate ? .yellow : .red))
             
-            Slider(value: $sliderValue, in: 0...1)
-                .tint(activeColor)
+            Slider(value: $logViewModel.sliderValue, in: 0...1)
+                .tint(logViewModel.activeColor)
             HStack{
                 Text("Mild")
                 Spacer()
@@ -110,7 +100,7 @@ struct LogSymptomView: View {
             .foregroundStyle(.secondary)
             
             Button {
-                viewModel.addLog(symptomName: symptom.name, severity: currentMode.rawValue, context: modelContext)
+                viewModel.addLog(symptomName: symptom.name, severity: logViewModel.currentMode.rawValue, context: modelContext)
                 
                 dismiss()
             }
@@ -119,7 +109,7 @@ struct LogSymptomView: View {
                     .padding()
                     .font(.headline)
                     .frame(maxWidth: .infinity)
-                    .background(activeColor.gradient)
+                    .background(logViewModel.activeColor.gradient)
                     .foregroundColor(.white)
                     .clipShape(RoundedRectangle(cornerRadius: 10))
                     .padding()

@@ -42,7 +42,7 @@ struct SymptomHistoryRowView: View {
                     .font(.headline)
                     .fontWeight(.semibold)
                 
-                Text(formatted(log.timestamp))
+                Text(Helper.shared.formatted(log.timestamp))
                     .foregroundStyle(.secondary)
             }
             
@@ -59,18 +59,6 @@ struct SymptomHistoryRowView: View {
                         .strokeBorder(.primary, lineWidth: 2)
                 )
         }
-    }
-    
-    private static let timestampFormatter: DateFormatter = {
-        let df = DateFormatter()
-        df.dateStyle = .medium
-        df.timeStyle = .short
-        df.doesRelativeDateFormatting = false
-        return df
-    }()
-    
-    private func formatted(_ date: Date) -> String {
-        Self.timestampFormatter.string(from: date)
     }
 }
 
