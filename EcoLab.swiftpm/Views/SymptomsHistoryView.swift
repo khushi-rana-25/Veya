@@ -29,7 +29,7 @@ struct SymptomsHistoryView: View {
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
-                        LogGraphView()
+                        SymptomInsightsView()
                     } label: {
                         Image(systemName: "chart.bar.xaxis")
                             .foregroundStyle(.blue)
