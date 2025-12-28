@@ -63,6 +63,8 @@ struct SymptomHistoryRowView: View {
             
             Text(log.severity)
                 .padding()
+                .font(.subheadline)
+                .fontWeight(.semibold)
                 .foregroundStyle(color)
                 .frame(width: 120)
                 .overlay(

@@ -18,6 +18,7 @@ struct SymptomInsightsView: View {
     }
     
     var body: some View {
+        NavigationStack{
             GeometryReader { geometry in
                 ZStack {
                     Image("Background2")
@@ -58,7 +59,7 @@ struct SymptomInsightsView: View {
                                                 y: .value("Symptom", log.symptomName)
                                             )
                                             .cornerRadius(6)
-                                            .foregroundStyle(severityColor(log.severity).gradient)
+                                            .foregroundStyle(Helper.shared.severityColor(log.severity).gradient)
                                         }
                                     }
                                     .frame(height: 200 + CGFloat(uniqueSymptomCount * 50))
@@ -95,11 +96,14 @@ struct SymptomInsightsView: View {
             }
             .ignoresSafeArea()
             .toolbarBackground(.hidden, for: .navigationBar)
+            .toolbar{
+                ToolbarItem(placement: .topBarTrailing) {
+                    ShareLink(item: Helper.shared.renderPDF(logs: dataModel)) {
+                        Image(systemName: "square.and.arrow.up")
+                            .foregroundStyle(.white)
+                    }
+                }
+            }
         }
-    
-    func severityColor(_ severity: String) -> Color {
-            if severity == "Mild" { return .green }
-            else if severity == "Moderate" { return .orange }
-            else { return .red }
-        }
+    }
 }
