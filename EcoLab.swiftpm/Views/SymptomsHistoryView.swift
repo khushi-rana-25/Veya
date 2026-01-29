@@ -13,32 +13,47 @@ struct SymptomsHistoryView: View {
     @Query(sort: \LogEntry.timestamp, order: .reverse) var dataModel: [LogEntry]
     @State var viewModel: ViewModel = ViewModel()
     
+    var groupedLogs: [(key: Date, value: [LogEntry])] {
+        let grouped = Dictionary(grouping: dataModel) { entry in
+            let components = Calendar.current.dateComponents([.year, .month], from: entry.timestamp)
+            return Calendar.current.date(from: components) ?? Date()
+        }
+        
+        return grouped.sorted { $0.key > $1.key }
+    }
+    
     var body: some View {
-        NavigationStack{
-            List{
-                ForEach(dataModel) { log in
-                    SymptomHistoryRowView(log: log)
-                }
-                .onDelete(perform: { indexSet in
-                    viewModel.deleteLog(at: indexSet, from: dataModel, context: modelContext)
-                })
-                .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
-            }
-            .listStyle(.plain)
-            .navigationTitle("History")
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        SymptomInsightsView()
-                    } label: {
-                        Image(systemName: "chart.bar.xaxis")
-                            .foregroundStyle(.blue)
+            NavigationStack {
+                List {
+                    ForEach(groupedLogs, id: \.key) { section in
+                        Section {
+                            ForEach(section.value) { log in
+                                SymptomHistoryRowView(log: log)
+                            }
+                            .onDelete { indexSet in
+                                viewModel.deleteLog(at: indexSet, in: section.value, modelContext: modelContext)
+                            }
+                        } header: {
+                            Text(section.key.formatted(.dateTime.month(.wide).year()))
+                                .font(.headline)
+                                .foregroundStyle(.primary)
+                        }
                     }
-
+                }
+                .listStyle(.plain)
+                .navigationTitle("History")
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        NavigationLink {
+                            SymptomInsightsView()
+                        } label: {
+                            Image(systemName: "chart.bar.xaxis")
+                                .foregroundStyle(.blue)
+                        }
+                    }
                 }
             }
         }
-    }
 }
 
 struct SymptomHistoryRowView: View {

@@ -25,4 +25,12 @@ class ViewModel {
             try? context.save()
         }
     }
+    
+    func deleteLog(at indexSet: IndexSet, in sectionLogs: [LogEntry], modelContext: ModelContext) {
+            for index in indexSet {
+                let logToDelete = sectionLogs[index]
+                modelContext.delete(logToDelete)
+                try? modelContext.save()
+            }
+    }
 }
