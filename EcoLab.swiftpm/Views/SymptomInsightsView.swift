@@ -59,7 +59,9 @@ struct SymptomInsightsView: View {
                                                 y: .value("Symptom", log.symptomName)
                                             )
                                             .cornerRadius(6)
-                                            .foregroundStyle(Helper.shared.severityColor(log.severity).gradient)
+                                            .foregroundStyle(Helper.shared.severityColor(log.severity).gradient
+                                                .opacity(0.7)
+                                            )
                                         }
                                     }
                                     .frame(height: 200 + CGFloat(uniqueSymptomCount * 50))

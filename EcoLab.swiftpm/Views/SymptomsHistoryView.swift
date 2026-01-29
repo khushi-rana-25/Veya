@@ -25,7 +25,7 @@ struct SymptomsHistoryView: View {
                 .alignmentGuide(.listRowSeparatorLeading) { _ in 0 }
             }
             .listStyle(.plain)
-            .navigationTitle("Journal")
+            .navigationTitle("History")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     NavigationLink {
@@ -55,6 +55,7 @@ struct SymptomHistoryRowView: View {
                 
                 Text(Helper.shared.formatted(log.timestamp))
                     .foregroundStyle(.secondary)
+                    .font(.subheadline)
             }
             
             Spacer()
@@ -71,6 +72,7 @@ struct SymptomHistoryRowView: View {
                     RoundedRectangle(cornerRadius: 27)
                         .strokeBorder(.primary, lineWidth: 2)
                 )
+            
         }
     }
 }
