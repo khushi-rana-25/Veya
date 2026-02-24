@@ -8,13 +8,13 @@ import PackageDescription
 import AppleProductTypes
 
 let package = Package(
-    name: "EcoLab",
+    name: "Veya",
     platforms: [
         .iOS("17.0")
     ],
     products: [
         .iOSApplication(
-            name: "EcoLab",
+            name: "Veya",
             targets: ["AppModule"],
             bundleIdentifier: "com.khushi.internship.EcoLab",
             teamIdentifier: "4MLB4J69LF",
@@ -40,5 +40,5 @@ let package = Package(
             path: "."
         )
     ],
-    swiftLanguageModes: [.v6]
+    swiftLanguageVersions: [.version("6")]
 )
