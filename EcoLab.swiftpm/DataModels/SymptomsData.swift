@@ -1,11 +1,5 @@
-//
-//  File.swift
-//  EcoLab
-//
-//  Created by Khushi Rana on 24/12/25.
-//
-
 import Foundation
+import SwiftData
 
 struct Symptom: Identifiable {
     let id: UUID = .init()
@@ -18,6 +12,16 @@ struct Symptom: Identifiable {
     let whenToCallDoctor: String
     let sources: String
 }
+
+struct GroupedLog: Identifiable {
+    let id = UUID()
+    let symptomName: String
+    let severity: String
+    let logIDs: [PersistentIdentifier]
+    let timestamps: [Date]
+    let count: Int
+}
+
 
 enum PregnancySymptoms {
     static let allSymptoms: [Symptom] = [

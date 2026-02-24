@@ -1,173 +1,250 @@
-//
-//  SwiftUIView.swift
-//  EcoLab
-//
-//  Created by Khushi Rana on 25/12/25.
-//
-
 import SwiftUI
 
 struct SymptomDetailView: View {
+    @Environment(\.dismiss) private var dismiss
     let symptom: Symptom
     let color: Color
-    
-    var body: some View {
-        ScrollView {
 
-            VStack{
-                TopView(symptom: symptom, color: color)
-                
-                OverViewView(symptom: symptom)
-                
-                VStack(alignment: .leading, spacing: 20){
-                    Text("Remedies & Tips")
-                        .font(.title2)
-                        .foregroundStyle(.primary)
-                        .fontWeight(.semibold)
-                    
-                    ForEach(symptom.remedies.indices, id: \.self) { index in
-                        RemedyRowView(remedy: symptom.remedies[index])
+    private let themeCoral = Color(red: 0.85, green: 0.45, blue: 0.38)
+    private let themeCream = Color(red: 1.0, green: 0.97, blue: 0.96)
+    private let cardWhite = Color.white
+    private let textPrimary = Color(red: 0.13, green: 0.13, blue: 0.15)
+    private let textMuted = Color(red: 0.52, green: 0.52, blue: 0.55)
+
+    var body: some View {
+        ZStack(alignment: .top) {
+            themeCream.ignoresSafeArea()
+
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack(spacing: 0) {
+                    heroSection
+                        .padding(.bottom, 24)
+
+                    VStack(spacing: 16) {
+                        overviewCard
+                        remediesCard
+                        whenToCallCard
+                    }
+                    .padding(.horizontal, 20)
+                    .padding(.bottom, 100)
+                }
+            }
+            .ignoresSafeArea(edges: .top)
+
+            // Floating back button
+            HStack {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 15, weight: .bold))
+                        .foregroundStyle(.white)
+                        .frame(width: 38, height: 38)
+                        .background(.ultraThinMaterial.opacity(0.3))
+                        .background(Color.white.opacity(0.25))
+                        .clipShape(Circle())
+                }
+                .padding(.leading, 20)
+                .padding(.top, 56)
+                Spacer()
+            }
+        }
+        .navigationBarBackButtonHidden(true)
+    }
+
+    // MARK: - Hero Section (large top banner)
+
+    private var heroSection: some View {
+        ZStack(alignment: .bottomTrailing) {
+            themeCoral
+                .frame(maxWidth: .infinity)
+                .frame(height: 300)
+                .overlay(
+                    ZStack {
+                        Circle()
+                            .fill(Color.white.opacity(0.08))
+                            .frame(width: 220, height: 220)
+                            .offset(x: -80, y: -30)
+                        Circle()
+                            .fill(Color.white.opacity(0.06))
+                            .frame(width: 150, height: 150)
+                            .offset(x: -110, y: 50)
+                        Circle()
+                            .fill(Color.white.opacity(0.05))
+                            .frame(width: 90, height: 90)
+                            .offset(x: 60, y: -70)
+                    }
+                )
+                .ignoresSafeArea(edges: .top)
+            
+            VStack(alignment: .trailing, spacing: 12) {
+                ZStack {
+                    RoundedRectangle(cornerRadius: 18)
+                        .fill(Color.white.opacity(0.22))
+                        .frame(width: 64, height: 64)
+                    Image(systemName: symptom.icon)
+                        .font(.system(size: 28, weight: .medium))
+                        .foregroundStyle(.white)
+                }
+
+                Text(symptom.name)
+                    .font(.system(size: 30, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .multilineTextAlignment(.trailing)
+
+                HStack(spacing: 8) {
+                    ForEach(symptom.trimesters, id: \.self) { trimester in
+                        Text(trimester)
+                            .font(.system(size: 11, weight: .semibold, design: .rounded))
+                            .foregroundStyle(.white)
+                            .padding(.horizontal, 12)
+                            .padding(.vertical, 6)
+                            .background(Color.white.opacity(0.22))
+                            .clipShape(Capsule())
                     }
                 }
-                .padding()
-                
-                DangerView()
-                
-                Text(.init(symptom.sources))
-                    .padding()
-                    .tint(.blue)
-                    
             }
-            .padding(.top, 50)
+            .padding(.trailing, 24)
+            .padding(.bottom, 28)
         }
+        .clipShape(
+            UnevenRoundedRectangle(
+                topLeadingRadius: 0,
+                bottomLeadingRadius: 32,
+                bottomTrailingRadius: 32,
+                topTrailingRadius: 0
+            )
+        )
+        .shadow(color: themeCoral.opacity(0.35), radius: 20, y: 10)
     }
-}
 
-struct TopView: View{
-    let symptom: Symptom
-    let color: Color
-    
-    var body: some View {
-        VStack(spacing: 20){
-            Image(systemName: symptom.icon)
-                .padding()
-                .foregroundStyle(color)
-                .background(color.opacity(0.2).clipShape(Circle()))
-            
-            Text(symptom.name)
-                .font(.largeTitle)
-                .foregroundStyle(color)
-                .fontWeight(.bold)
-                .frame(maxWidth: .infinity)
-                .multilineTextAlignment(.center)
-            
-            HStack{
-                ForEach(symptom.trimesters.indices, id: \.self) { index in
-                    Text(symptom.trimesters[index])
-                        .foregroundStyle(color)
-                        .font(.caption.bold())
-                        .padding()
-                        .background(color.opacity(0.2))
-                        .clipShape(.capsule)
-                }
-            }
-        }
-    }
-}
+    // MARK: - Overview Card
 
-struct OverViewView: View {
-    let symptom: Symptom
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: 20){
-            Text("Overview")
-                .font(.title2)
-                .foregroundStyle(.primary)
-                .fontWeight(.semibold)
-            
-            VStack{
-                Text("\"\(symptom.whatIsIt)\"")
-                    .foregroundStyle(.primary)
-                    .font(.headline)
-                    .fontWeight(.medium)
-                    .multilineTextAlignment(.leading)
-                
-                Divider()
-                    .overlay(.black.opacity(0.6))
-                
-                Text(symptom.description)
-                    .foregroundStyle(Color(#colorLiteral(red: 0.4756349325, green: 0.4756467342, blue: 0.4756404161, alpha: 1)))
-                    .multilineTextAlignment(.leading)
+    private var overviewCard: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
+            HStack(spacing: 8) {
+                Image(systemName: "doc.text.fill")
+                    .font(.system(size: 13))
+                    .foregroundStyle(themeCoral)
+                Text("Overview")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(themeCoral)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
             }
-            .padding()
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: Color.black.opacity(0.2), radius: 3)
+            .padding(.bottom, 14)
+
+            Divider()
+                .padding(.bottom, 16)
+
+            Text(symptom.whatIsIt)
+                .font(.system(size: 16, weight: .semibold, design: .rounded))
+                .foregroundStyle(textPrimary)
+                .lineSpacing(4)
+                .padding(.bottom, 10)
+
+            Text(symptom.description)
+                .font(.system(size: 14, weight: .regular, design: .rounded))
+                .foregroundStyle(textMuted)
+                .lineSpacing(5)
         }
         .padding(20)
+        .background(cardWhite)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .shadow(color: Color.black.opacity(0.05), radius: 12, y: 4)
     }
-}
 
-struct RemedyRowView: View {
-    let remedy: String
-    
-    var body: some View {
-        HStack(spacing: 15){
-                Image(systemName: "checkmark.circle.fill")
-                    .resizable()
-                    .scaledToFit()
-                    .foregroundStyle(Color(#colorLiteral(red: 0, green: 0.5484743714, blue: 0.3741536736, alpha: 1)).opacity(0.8))
-                    .frame(width: 30, height: 30)
-                
-                Text(remedy)
-                    .font(.subheadline)
-                    .fontWeight(.regular)
-            
-               Spacer()
+    // MARK: - Remedies Card
+
+    private var remediesCard: some View {
+        VStack(alignment: .leading, spacing: 0) {
+            // Header
+            HStack(spacing: 8) {
+                Image(systemName: "sparkles")
+                    .font(.system(size: 13))
+                    .foregroundStyle(themeCoral)
+                Text("Remedies & Tips")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(themeCoral)
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+                Spacer()
+                Text("\(symptom.remedies.count) tips")
+                    .font(.system(size: 12, weight: .medium, design: .rounded))
+                    .foregroundStyle(textMuted)
             }
-            .padding()
-            .frame(maxWidth: .infinity)
-            .background(Color(.systemBackground))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: Color.black.opacity(0.1), radius: 2)
-    }
-}
+            .padding(.bottom, 14)
 
-struct DangerView: View {
-    var body: some View {
+            Divider()
+                .padding(.bottom, 4)
 
-        VStack(alignment: .leading){
-                HStack{
-                    Image(systemName: "exclamationmark.triangle")
-                        .resizable()
-                        .scaledToFit()
-                        .foregroundStyle(Color(#colorLiteral(red: 0.7575458288, green: 0, blue: 0.03144354746, alpha: 1)))
-                        .frame(width: 30, height: 30)
-                    
-                    Text("When to Call a Doctor")
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                        .foregroundStyle(Color(#colorLiteral(red: 0.7575458288, green: 0, blue: 0.03144354746, alpha: 1)))
+            ForEach(Array(symptom.remedies.enumerated()), id: \.offset) { index, remedy in
+                HStack(alignment: .center, spacing: 14) {
+                    // Number
+                    Text("\(index + 1)")
+                        .font(.system(size: 12, weight: .bold, design: .rounded))
+                        .foregroundStyle(themeCoral)
+                        .frame(width: 28, height: 28)
+                        .background(themeCoral.opacity(0.12))
+                        .clipShape(Circle())
+
+                    Text(remedy)
+                        .font(.system(size: 14, weight: .medium, design: .rounded))
+                        .foregroundStyle(textPrimary)
+                        .fixedSize(horizontal: false, vertical: true)
+
+                    Spacer()
                 }
-                
-                Text("You cannot keep any food or fluids down for 24 hours.")
-                    .foregroundStyle(Color(#colorLiteral(red: 0.5861611366, green: 0.2364613414, blue: 0.2301900387, alpha: 1)))
-                    .font(.subheadline)
-                    .fontWeight(.regular)
-                    .padding(5)
+                .padding(.vertical, 12)
+
+                if index < symptom.remedies.count - 1 {
+                    Divider()
+                        .padding(.leading, 42)
+                }
             }
-            .padding()
-            .background(LinearGradient(
-                colors: [
-                    Color(red: 0.99, green: 0.95, blue: 0.95),
-                    Color(red: 1.0, green: 0.97, blue: 0.93),
-                    Color(red: 0.99, green: 0.95, blue: 0.95)
-                ],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            ))
-            .clipShape(RoundedRectangle(cornerRadius: 10))
-            .shadow(color: Color.black.opacity(0.2), radius: 2)
+        }
+        .padding(20)
+        .background(cardWhite)
+        .clipShape(RoundedRectangle(cornerRadius: 20))
+        .shadow(color: Color.black.opacity(0.05), radius: 12, y: 4)
+    }
+
+    // MARK: - When to Call Doctor Card
+
+    private var whenToCallCard: some View {
+        HStack(alignment: .top, spacing: 14) {
+            ZStack {
+                Circle()
+                    .fill(Color.red.opacity(0.12))
+                    .frame(width: 42, height: 42)
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 18))
+                    .foregroundStyle(Color.red)
+            }
+
+            VStack(alignment: .leading, spacing: 6) {
+                Text("When to Call Your Doctor")
+                    .font(.system(size: 13, weight: .bold, design: .rounded))
+                    .foregroundStyle(Color(red: 0.75, green: 0.18, blue: 0.18))
+                    .textCase(.uppercase)
+                    .tracking(0.5)
+
+                Text(symptom.whenToCallDoctor)
+                    .font(.system(size: 14, weight: .regular, design: .rounded))
+                    .foregroundStyle(Color(red: 0.6, green: 0.15, blue: 0.15))
+                    .lineSpacing(4)
+            }
+        }
+        .padding(18)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(
+            RoundedRectangle(cornerRadius: 20)
+                .fill(Color.red.opacity(0.07))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 20)
+                        .stroke(Color.red.opacity(0.18), lineWidth: 1)
+                )
+        )
+        .shadow(color: Color.red.opacity(0.06), radius: 10, y: 4)
     }
 }
-

@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  EcoLab
-//
-//  Created by Khushi Rana on 27/12/25.
-//
-
 import Foundation
 import SwiftUI
 

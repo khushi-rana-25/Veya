@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  EcoLab
-//
-//  Created by Khushi Rana on 27/12/25.
-//
-
 import Foundation
 import SwiftUI
 import SwiftData
@@ -26,33 +19,8 @@ class Helper{
     }
     
     func severityColor(_ severity: String) -> Color {
-            if severity == "Mild" { return .green }
-            else if severity == "Moderate" { return .orange }
-            else { return .red }
-        }
-    
-    @MainActor
-    func renderPDF(logs: [LogEntry]) -> URL {
-            let pdfView = PdfReportView(logs: logs)
-                .frame(width: 595, height: 842)
-            
-            let renderer = ImageRenderer(content: pdfView)
-            let url = URL.documentsDirectory.appending(path: "EcoLab-Report.pdf")
-            
-            renderer.render { size, context in
-                var box = CGRect(x: 0, y: 0, width: 595, height: 842)
-                
-                guard let pdf = CGContext(url as CFURL, mediaBox: &box, nil) else {
-                    return
-                }
-                
-                pdf.beginPDFPage(nil)
-                context(pdf)
-                pdf.endPDFPage()
-                pdf.closePDF()
-            }
-            
-            return url
-        }
-    
+        if severity == "Mild" { return .green }
+        else if severity == "Moderate" { return .orange }
+        else { return .red }
+    }
 }
