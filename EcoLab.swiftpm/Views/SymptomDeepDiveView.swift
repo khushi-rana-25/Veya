@@ -31,6 +31,22 @@ struct SymptomDeepDiveView: View {
                 .padding(.bottom, 40)
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                Button(action: { dismiss() }) {
+                    Image(systemName: "chevron.left")
+                        .font(.system(size: 16, weight: .bold))
+                        .foregroundStyle(textPrimary)
+                        .padding(10)
+                        .background(.white.opacity(0.9))
+                        .clipShape(Circle())
+                        .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
+                }
+                .accessibilityLabel("Back")
+                .accessibilityHint("Returns to previous screen")
+            }
+        }
     }
 
     // MARK: - Header
@@ -56,6 +72,9 @@ struct SymptomDeepDiveView: View {
                 .multilineTextAlignment(.center)
                 .lineSpacing(4)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Let's look closer. Sometimes \(loggedSymptom.lowercased()) brings friends along. Are you feeling any of these too?")
+        .accessibilityAddTraits(.isHeader)
     }
 
     // MARK: - Companion Chips
@@ -93,6 +112,9 @@ struct SymptomDeepDiveView: View {
                         .shadow(color: .black.opacity(secondarySymptoms.contains(item) ? 0 : 0.04), radius: 6, y: 3)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("\(item), \(secondarySymptoms.contains(item) ? "selected" : "not selected")")
+                    .accessibilityHint("Double tap to \(secondarySymptoms.contains(item) ? "deselect" : "select") this companion symptom")
+                    .accessibilityAddTraits(secondarySymptoms.contains(item) ? [.isButton, .isSelected] : .isButton)
                 }
             }
         }
@@ -100,6 +122,8 @@ struct SymptomDeepDiveView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 12, y: 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("Common companion symptoms")
     }
 
     // MARK: - Duration Picker
@@ -128,6 +152,10 @@ struct SymptomDeepDiveView: View {
                         .frame(maxWidth: .infinity)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel("Day \(day)")
+                    .accessibilityValue(daysActive == day ? "Selected" : "")
+                    .accessibilityHint("Double tap to set duration to \(day) days")
+                    .accessibilityAddTraits(daysActive == day ? [.isButton, .isSelected] : .isButton)
                 }
             }
             .padding(.horizontal, 8)
@@ -137,6 +165,8 @@ struct SymptomDeepDiveView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.05), radius: 12, y: 4)
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("How many days has this been visiting?")
     }
 
     // MARK: - Insight Card
@@ -163,6 +193,9 @@ struct SymptomDeepDiveView: View {
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: daysActive)
         .animation(.spring(response: 0.4, dampingFraction: 0.8), value: secondarySymptoms)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Insight. \(insightText)")
+        .accessibilityAddTraits(.isStaticText)
     }
 
     // MARK: - Done Button
@@ -186,6 +219,8 @@ struct SymptomDeepDiveView: View {
                 .shadow(color: themeCoral.opacity(0.35), radius: 10, y: 5)
         }
         .buttonStyle(.plain)
+        .accessibilityLabel("Thanks for sharing")
+        .accessibilityHint("Finishes and returns to guide")
     }
 
     // MARK: - Insight Logic

@@ -32,10 +32,11 @@ struct OnboardingView: View {
                 }
                 .scaleEffect(animateIn ? 1 : 0.7)
                 .opacity(animateIn ? 1 : 0)
+                .accessibilityHidden(true)
                 
                 Spacer().frame(height: 32)
                 VStack(spacing: 8) {
-                    Text("Welcome to Bloom")
+                    Text("Welcome to Veya")
                         .font(.system(size: 32, weight: .bold, design: .rounded))
                         .foregroundStyle(Color(red: 0.18, green: 0.18, blue: 0.18))
                     
@@ -45,6 +46,8 @@ struct OnboardingView: View {
                 }
                 .offset(y: animateIn ? 0 : 20)
                 .opacity(animateIn ? 1 : 0)
+                .accessibilityElement(children: .combine)
+                .accessibilityAddTraits(.isHeader)
                 
                 Spacer().frame(height: 48)
                 VStack(spacing: 24) {
@@ -60,6 +63,8 @@ struct OnboardingView: View {
                             .background(Color.white)
                             .clipShape(RoundedRectangle(cornerRadius: 14))
                             .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+                            .accessibilityLabel("Your first name")
+                            .accessibilityHint("Enter your first name")
                     }
                     
                     VStack(alignment: .leading, spacing: 8) {
@@ -68,6 +73,8 @@ struct OnboardingView: View {
                             .foregroundStyle(rose)
                         
                         DatePicker("", selection: $dueDate, in: Date()..., displayedComponents: .date)
+                            .accessibilityLabel("Due date")
+                            .accessibilityHint("Select your baby's due date")
                             .datePickerStyle(.compact)
                             .labelsHidden()
                             .padding(.horizontal, 16)
@@ -114,6 +121,8 @@ struct OnboardingView: View {
                 .padding(.horizontal, 28)
                 .offset(y: animateIn ? 0 : 20)
                 .opacity(animateIn ? 1 : 0)
+                .accessibilityLabel("Begin my journey")
+                .accessibilityHint("Save your name and due date, and start using Veya")
                 
                 Spacer()
             }
@@ -169,6 +178,8 @@ struct OnboardingView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 14))
         .shadow(color: .black.opacity(0.05), radius: 4, y: 2)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Preview: Week \(weekNumber), \(trimester), \(daysRemaining) days left")
     }
 }
 

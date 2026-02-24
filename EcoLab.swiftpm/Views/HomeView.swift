@@ -55,6 +55,8 @@ struct HomeView: View {
                             Image(systemName: "line.3.horizontal.decrease.circle")
                                 .foregroundStyle(teal)
                         }
+                        .accessibilityLabel("Sort symptoms")
+                        .accessibilityHint("Opens menu to sort symptoms alphabetically or in random order")
                     }
                     ToolbarItem(placement: .topBarTrailing) {
                         Button {
@@ -66,6 +68,9 @@ struct HomeView: View {
                                 .font(.title3)
                                 .foregroundStyle(isLogging ? .secondary : teal)
                         }
+                        .accessibilityLabel(isLogging ? "Exit log mode" : "Log a symptom")
+                        .accessibilityHint(isLogging ? "Returns to symptom guide view" : "Switch to log mode to record how you feel")
+                        .accessibilityValue(isLogging ? "Log mode on" : "Log mode off")
                     }
                 }
             }
@@ -73,6 +78,8 @@ struct HomeView: View {
                 Image(systemName: "list.bullet.clipboard")
                 Text("Guide")
             }
+            .accessibilityLabel("Guide tab")
+            .accessibilityHint("Symptom guide and pregnancy information")
             NavigationStack {
                 SymptomsHistoryView()
                     .navigationTitle("History")
@@ -81,6 +88,8 @@ struct HomeView: View {
                 Image(systemName: "arrow.2.squarepath")
                 Text("History")
             }
+            .accessibilityLabel("History tab")
+            .accessibilityHint("View your logged symptoms history")
         }
         .tint(teal)
     }
@@ -106,6 +115,7 @@ struct HomeView: View {
                         .font(.system(size: 24))
                         .foregroundStyle(.white)
                 }
+                .accessibilityHidden(true)
             }
             
             Divider()
@@ -149,6 +159,9 @@ struct HomeView: View {
         )
         .clipShape(RoundedRectangle(cornerRadius: 24))
         .shadow(color: rose.opacity(0.35), radius: 12, y: 6)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Pregnancy progress. \(greeting), \(userName). Week \(weekNumber), \(trimester). \(daysRemaining) days left, week \(weekNumber) of 40 total weeks. Progress \(weekNumber) of 40 weeks.")
+        .accessibilityAddTraits(.isHeader)
     }
     
     private func statItem(value: String, label: String, color: Color) -> some View {
@@ -180,8 +193,11 @@ struct HomeView: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.secondary)
+                    .accessibilityHidden(true)
                 TextField("Search symptoms", text: $searchText)
                     .font(.system(size: 16, design: .rounded))
+                    .accessibilityLabel("Search symptoms")
+                    .accessibilityHint("Filter the list of pregnancy symptoms by name")
             }
             .padding(.horizontal, 14)
             .padding(.vertical, 11)
@@ -206,6 +222,8 @@ struct HomeView: View {
                         SymptomRowView(symptomName: symptom.name, symptomIcon: symptom.icon, iconColor: color, isLogging: isLogging)
                     }
                     .buttonStyle(.plain)
+                    .accessibilityLabel(isLogging ? "Log \(symptom.name)" : "View \(symptom.name) details")
+                    .accessibilityHint(isLogging ? "Opens screen to log this symptom" : "Opens symptom information and tips")
                 }
             }
             .padding(.horizontal, 16)
@@ -263,6 +281,9 @@ struct SymptomRowView: View {
         .clipShape(RoundedRectangle(cornerRadius: 16))
         .shadow(color: .black.opacity(0.04), radius: 4, y: 2)
         .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLogging)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(symptomName)\(isLogging ? ", log symptom" : "")")
+        .accessibilityHint(isLogging ? "Double tap to log this symptom" : "Double tap to view details")
     }
 }
 

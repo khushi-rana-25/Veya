@@ -14,6 +14,7 @@ struct LogSymptomView: View {
     @State private var showDeepDive: Bool = false
     @Environment(\.modelContext) var modelContext
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State var logViewModel: LogSymptomViewModel
     @State var viewModel = ViewModel()
 
@@ -56,12 +57,16 @@ struct LogSymptomView: View {
                 .fontWeight(.bold)
                 .padding(.top, 50)
                 .multilineTextAlignment(.center)
+                .accessibilityAddTraits(.isHeader)
 
             Text("Drag the slider to match your feeling")
                 .foregroundStyle(.secondary)
                 .font(.headline)
                 .padding()
+                .accessibilityHidden(true)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("How is your \(symptom.name)? Drag the slider to match your feeling.")
     }
 
     var pulseView: some View {
@@ -71,16 +76,18 @@ struct LogSymptomView: View {
                 .frame(width: 150, height: 150)
                 .blur(radius: 50)
                 .opacity(0.6)
-                .scaleEffect(isPulsing ? 1.3 + (logViewModel.sliderValue * 0.5) : 1.0)
+                .scaleEffect((reduceMotion ? false : isPulsing) ? 1.3 + (logViewModel.sliderValue * 0.5) : 1.0)
 
             Image(systemName: symptom.icon)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 100, height: 100)
                 .foregroundStyle(logViewModel.activeColor)
-                .scaleEffect(isPulsing ? 1.3 : 1.0)
+                .scaleEffect((reduceMotion ? false : isPulsing) ? 1.3 : 1.0)
         }
+        .accessibilityHidden(true)
         .onAppear {
+            guard !reduceMotion else { return }
             withAnimation(.easeInOut(duration: logViewModel.animationDuration).repeatForever(autoreverses: true)) {
                 isPulsing = true
             }
@@ -92,9 +99,13 @@ struct LogSymptomView: View {
             Text(logViewModel.currentMode.rawValue)
                 .font(.system(.headline, design: .rounded))
                 .foregroundStyle(logViewModel.currentMode == .mild ? .green : (logViewModel.currentMode == .moderate ? .yellow : .red))
+                .accessibilityHidden(true)
 
             Slider(value: $logViewModel.sliderValue, in: 0...1)
                 .tint(logViewModel.activeColor)
+                .accessibilityLabel("Symptom severity")
+                .accessibilityValue(logViewModel.currentMode.rawValue)
+                .accessibilityHint("Adjust slider between mild and severe. Currently \(logViewModel.currentMode.rawValue).")
             HStack {
                 Text("Mild")
                 Spacer()
@@ -102,6 +113,7 @@ struct LogSymptomView: View {
             }
             .font(.caption)
             .foregroundStyle(.secondary)
+            .accessibilityHidden(true)
 
             Button {
                 viewModel.addLog(symptomName: symptom.name, severity: logViewModel.currentMode.rawValue, context: modelContext)
@@ -116,6 +128,8 @@ struct LogSymptomView: View {
                     .clipShape(RoundedRectangle(cornerRadius: 18))
                     .padding()
             }
+            .accessibilityLabel("Log symptom as \(logViewModel.currentMode.rawValue)")
+            .accessibilityHint("Saves this \(symptom.name) log and opens follow-up questions")
         }
     }
 }

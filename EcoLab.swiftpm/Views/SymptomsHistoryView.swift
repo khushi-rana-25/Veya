@@ -97,6 +97,9 @@ struct SymptomsHistoryView: View {
         .padding(.horizontal, 20)
         .padding(.vertical, 12)
         .background(themeCream)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(date.formatted(.dateTime.month(.wide).year())), \(count) log groups")
+        .accessibilityAddTraits(.isHeader)
     }
     
     private var emptyState: some View {
@@ -104,9 +107,13 @@ struct SymptomsHistoryView: View {
             Image(systemName: "clock.badge.xmark")
                 .font(.system(size: 40))
                 .foregroundStyle(themeCoral.opacity(0.4))
+                .accessibilityHidden(true)
             Text("No logs yet")
                 .font(.bold(.system(size: 18, design: .rounded))())
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("No logs yet. Log symptoms from the Guide tab to see your history here.")
+        .accessibilityAddTraits(.isStaticText)
     }
 }
 
@@ -162,5 +169,8 @@ struct SymptomHistoryRowView: View {
         .background(Color.white)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: .black.opacity(0.03), radius: 8, y: 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(group.symptomName), \(group.severity). Logged \(group.count) time\(group.count == 1 ? "" : "s"). Last at \(group.timestamps.first!.formatted(.dateTime.hour().minute())). Swipe left to delete.")
+        .accessibilityHint("Double tap to select. Swipe left for delete option.")
     }
 }

@@ -44,6 +44,8 @@ struct SymptomDetailView: View {
                 }
                 .padding(.leading, 20)
                 .padding(.top, 56)
+                .accessibilityLabel("Back")
+                .accessibilityHint("Returns to symptom list")
                 Spacer()
             }
         }
@@ -105,6 +107,9 @@ struct SymptomDetailView: View {
             .padding(.trailing, 24)
             .padding(.bottom, 28)
         }
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("\(symptom.name). Relevant for \(symptom.trimesters.joined(separator: ", ")).")
+        .accessibilityAddTraits(.isHeader)
         .clipShape(
             UnevenRoundedRectangle(
                 topLeadingRadius: 0,
@@ -133,9 +138,11 @@ struct SymptomDetailView: View {
                 Spacer()
             }
             .padding(.bottom, 14)
+            .accessibilityHidden(true)
 
             Divider()
                 .padding(.bottom, 16)
+                .accessibilityHidden(true)
 
             Text(symptom.whatIsIt)
                 .font(.system(size: 16, weight: .semibold, design: .rounded))
@@ -152,6 +159,9 @@ struct SymptomDetailView: View {
         .background(cardWhite)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color.black.opacity(0.05), radius: 12, y: 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Overview. \(symptom.whatIsIt). \(symptom.description)")
+        .accessibilityAddTraits(.isHeader)
     }
 
     // MARK: - Remedies Card
@@ -200,6 +210,7 @@ struct SymptomDetailView: View {
                 if index < symptom.remedies.count - 1 {
                     Divider()
                         .padding(.leading, 42)
+                        .accessibilityHidden(true)
                 }
             }
         }
@@ -207,6 +218,9 @@ struct SymptomDetailView: View {
         .background(cardWhite)
         .clipShape(RoundedRectangle(cornerRadius: 20))
         .shadow(color: Color.black.opacity(0.05), radius: 12, y: 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("Remedies and tips. \(symptom.remedies.enumerated().map { "\($0.offset + 1): \($0.element)" }.joined(separator: ". "))")
+        .accessibilityAddTraits(.isHeader)
     }
 
     // MARK: - When to Call Doctor Card
@@ -246,5 +260,8 @@ struct SymptomDetailView: View {
                 )
         )
         .shadow(color: Color.red.opacity(0.06), radius: 10, y: 4)
+        .accessibilityElement(children: .combine)
+        .accessibilityLabel("When to call your doctor. \(symptom.whenToCallDoctor)")
+        .accessibilityAddTraits(.isHeader)
     }
 }
