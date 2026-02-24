@@ -42,16 +42,6 @@ struct SymptomsHistoryView: View {
                 }
                 .listStyle(.plain)
                 .navigationTitle("History")
-                .toolbar {
-                    ToolbarItem(placement: .topBarTrailing) {
-                        NavigationLink {
-                            SymptomInsightsView()
-                        } label: {
-                            Image(systemName: "chart.bar.xaxis")
-                                .foregroundStyle(.blue)
-                        }
-                    }
-                }
             }
         }
 }
@@ -85,7 +75,7 @@ struct SymptomHistoryRowView: View {
                 .frame(width: 120)
                 .overlay(
                     RoundedRectangle(cornerRadius: 27)
-                        .strokeBorder(.primary, lineWidth: 2)
+                        .strokeBorder(.gray, lineWidth: 1)
                 )
             
         }

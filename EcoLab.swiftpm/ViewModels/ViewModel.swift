@@ -8,7 +8,6 @@
 import Foundation
 import SwiftData
 
-@Observable
 class ViewModel {
     
     func addLog(symptomName: String, severity: String, context: ModelContext){
